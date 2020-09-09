@@ -14,7 +14,8 @@ enum ErrorCodes
   BadSimulationBackwardEulerOutput = 0x8,
   BadSimulationTrapezoidalOutput = 0x10,
   FileGreaterThanExpected = 0x20,
-  UnknownError = 0x40
+  IncompleteFile = 0x40,
+  UnknownError = 0x80
 };
 
 class SimulationOutputTester
@@ -88,6 +89,9 @@ int checkFile(istream& simulationOutput)
     if(!(line > 0 && time == 0.0))
       errorCode |= test.compareLine(line++, time, forward, backward, trapezoidal);
   }
+  
+  if(line < 10)
+    errorCode |= IncompleteFile;
 
   return errorCode;
 }
